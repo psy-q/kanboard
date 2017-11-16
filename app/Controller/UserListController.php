@@ -2,6 +2,8 @@
 
 namespace Kanboard\Controller;
 
+use Kanboard\Filter\UserNameFilter;
+
 /**
  * Class User List Controller
  *
@@ -35,14 +37,12 @@ class UserListController extends BaseController
         $search = urldecode($this->request->getStringParam('search'));
         $paginator = $this->userPagination->getListingPaginator();
 
-        // TODO: Big mistery: How to create a $userFilter?
-
         if ($search !== '' && ! $paginator->isEmpty()) {
-            $paginator
-                ->setQuery(
-                    $this->userModel
+
+            $paginator = $paginator
+                ->setQuery($this->userQuery
+                    ->withFilter(new UserNameFilter($search))
                     ->getQuery()
-                    ->withFilter($userFilter)
                 )
                 ->calculate();
         }
