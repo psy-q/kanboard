@@ -17,10 +17,14 @@ class UserListController extends BaseController
      */
     public function show()
     {
+        $search = urldecode($this->request->getStringParam('search'));
         $paginator = $this->userPagination->getListingPaginator();
 
         $this->response->html($this->helper->layout->app('user_list/listing', array(
             'title' => t('Users').' ('.$paginator->getTotal().')',
+            'values' => array(
+                'search' => $search,
+            ),
             'paginator' => $paginator,
         )));
     }
